@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using API.Data;
+using API.DTOs;
 using API.Entities;
 using API.Extensions;
 using API.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace API.DTOs
+namespace API.Data
 {
     public class LikesRepository : ILikesRepository
     {
@@ -49,8 +49,8 @@ namespace API.DTOs
                 Id = user.Id
             }).ToListAsync();
         }
-
-        public async Task<AppUser> GetUserWithLike(int userId)
+        
+        public async Task<AppUser> GetUserWithLikes(int userId)
         {
             return await _context.Users
                 .Include(x => x.LikedUsers)
