@@ -1,5 +1,4 @@
-﻿using System;
-using API.Entities;
+﻿using API.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -45,7 +44,7 @@ namespace API.Data
 
             builder.Entity<UserLike>()
                 .HasOne(s => s.LikedUser)
-                .WithMany(l => l.LikedByUser)
+                .WithMany(l => l.LikedByUsers)
                 .HasForeignKey(s => s.LikedUserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
