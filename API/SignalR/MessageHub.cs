@@ -86,6 +86,13 @@ namespace API.SignalR
             return await _messageRepository.SaveAllAsync();
         }
 
+        private async Task RemoveFromMessageGroup(string connectionId)
+        {
+            var connection = await _messageRepository.GetConnection(connectionId);
+            _messageRepository.RemoveConnection(connection);
+            await _messageRepository.SaveAllAsync();
+        }
+
         private string GetGroupName(string caller, string other)
         {
             var stringCompare = string.CompareOrdinal(caller, other) < 0;
