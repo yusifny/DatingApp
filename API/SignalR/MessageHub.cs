@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using API.DTOs;
 using API.Entities;
@@ -63,12 +64,20 @@ namespace API.SignalR
                 Content = createMessageDto.Content
             };
 
+            var groupName = GetGroupName(sender.UserName, recipient.UserName);
+
+            var group = await _messageRepository.GetMessageGroup(groupName);
+
+            if(group.Connections.Any(x => x.Username == recipient.UserName))
+            {
+                message.DateRead = DateTime.UtcNow;
+            }
+
             _messageRepository.AddMessage(message);
 
             if(await _messageRepository.SaveAllAsync()) 
             {
-                var group = GetGroupName(sender.UserName, recipient.UserName);
-                await Clients.Group(group).SendAsync("NewMessage", _mapper.Map<MessageDto>(message));
+                await Clients.Group(groupName).SendAsync("NewMessage", _mapper.Map<MessageDto>(message));
             }
         }
 
