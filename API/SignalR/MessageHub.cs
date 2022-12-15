@@ -37,7 +37,7 @@ namespace API.SignalR
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-            await  base.OnDisconnectedAsync(exception);
+            await base.OnDisconnectedAsync(exception);
         }
 
         public async Task SendMessage(CreateMessageDto createMessageDto)
@@ -68,6 +68,22 @@ namespace API.SignalR
                 var group = GetGroupName(sender.UserName, recipient.UserName);
                 await Clients.Group(group).SendAsync("NewMessage", _mapper.Map<MessageDto>(message));
             }
+        }
+
+        private async Task<bool> AddToGroup(HubCallerContext context, string groupName)
+        {
+            var group = await _messageRepository.GetMessageGroup(groupName);
+            var connection = new Connection(Context.ConnectionId, Context.User.GetUsername());
+
+            if(group == null)
+            {
+                group = new Group(groupName);
+                _messageRepository.AddGroup(group);
+            }
+
+            group.Connections.Add(connection);
+
+            return await _messageRepository.SaveAllAsync();
         }
 
         private string GetGroupName(string caller, string other)
