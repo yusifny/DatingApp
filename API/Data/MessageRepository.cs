@@ -100,7 +100,7 @@ namespace API.Data
             {
                 foreach(var mesaage in unreadMessages)
                 {
-                    mesaage.DateRead = DateTime.Now;
+                    mesaage.DateRead = DateTime.UtcNow;
                 }
 
                 await _context.SaveChangesAsync();
