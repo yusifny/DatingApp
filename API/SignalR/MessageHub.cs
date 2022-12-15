@@ -38,6 +38,7 @@ namespace API.SignalR
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
+            await RemoveFromMessageGroup(Context.ConnectionId);
             await base.OnDisconnectedAsync(exception);
         }
 
