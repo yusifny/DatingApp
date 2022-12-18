@@ -6,7 +6,7 @@ using API.Helpers;
 
 namespace API.Interfaces
 {
-    public interface IUserRepository
+    public interface  IUserRepository
     {
         void Update(AppUser user);
         Task<IEnumerable<AppUser>> GetUsersAsync();
@@ -14,5 +14,6 @@ namespace API.Interfaces
         Task<AppUser> GetUserByUsernameAsync(string username); 
         Task<PagedList<MemberDto>> GetMembersAsync(UserParams userParams);
         Task<MemberDto> GetMemberAsync(string username);
+        Task<string> GetUserGender(string username);
     }
 }

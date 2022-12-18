@@ -30,11 +30,11 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers([FromQuery]UserParams userParams)
         {
-            var user = await _unitOfWork.UserRepository.GetUserByUsernameAsync(User.GetUsername()); 
-            userParams.CurrentUserName = user.UserName;
+            var gender = await _unitOfWork.UserRepository.GetUserGender(User.GetUsername()); 
+            userParams.CurrentUserName = User.GetUsername();
 
             if(string.IsNullOrEmpty(userParams.Gender))
-                userParams.Gender = user.Gender == "male" ? "female" : "male"; 
+                userParams.Gender = gender == "male" ? "female" : "male"; 
             
             var users = await _unitOfWork.UserRepository.GetMembersAsync(userParams);
 
@@ -61,7 +61,7 @@ namespace API.Controllers
 
             _unitOfWork.UserRepository.Update(user);
 
-            if(await _unitOfWork.Complete()) return NoContent();
+            if(await _unitOfWork.Complete ()) return NoContent();
 
             return BadRequest("Failed to update user");
         }
@@ -88,7 +88,7 @@ namespace API.Controllers
 
             user.Photos.Add(photo);
 
-            if (await _unitOfWork.Complete())
+            if (await _unitOfWork.Complete ())
             {
                 return CreatedAtRoute("GetUser", new {username = user.UserName}, _mapper.Map<PhotoDto>(photo));
             }
@@ -109,7 +109,7 @@ namespace API.Controllers
             if(currentMain != null) currentMain.IsMain = false;
             photo.IsMain = true;
 
-            if(await _unitOfWork.Complete()) return NoContent();
+            if(await _unitOfWork.Complete ()) return NoContent();
 
             return BadRequest("Failed to set main photo");
         }
@@ -133,7 +133,7 @@ namespace API.Controllers
 
             user.Photos.Remove(photo);
 
-            if(await _unitOfWork.Complete()) return Ok();
+            if(await _unitOfWork.Complete ()) return Ok();
 
             return BadRequest("Failed to delete the photo");
         } 
